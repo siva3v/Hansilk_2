@@ -20,7 +20,13 @@ interface UploadDao {
     @Delete
     suspend fun delete(upload: Upload)
 
-    @Query("SELECT * FROM uploads")
+    @Query("SELECT * FROM uploads WHERE state=0 ORDER BY id ASC")
     fun getAll(): LiveData<List<Upload?>?>?
+
+    @Query("SELECT * FROM uploads WHERE state=0 LIMIT 1")
+    suspend fun getOne(): List<Upload>
+
+    @Query("SELECT COUNT(*) FROM uploads WHERE state=0")
+    suspend fun getCount(): Int
 
 }

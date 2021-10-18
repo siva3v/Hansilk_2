@@ -7,7 +7,7 @@ class ServiceUtils {
 
     companion object {
 
-        private fun isThisServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
+        fun isThisServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
             try {
                 val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 for (service in manager.getRunningServices(Int.MAX_VALUE)) {

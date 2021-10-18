@@ -1,4 +1,4 @@
-package com.hansilk.two.support.utilsPrime.recyclerview
+package com.hansilk.two.support.utilsUI.recyclerview
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil

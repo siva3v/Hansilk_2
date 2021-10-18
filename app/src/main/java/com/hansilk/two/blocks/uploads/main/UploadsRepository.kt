@@ -25,6 +25,8 @@ class UploadsRepository(private val db: RoomDatabase) {
 
 
     suspend fun insertUpload (upload: Upload) = db.uploadDao().insert(upload)
+    suspend fun updateUpload (upload: Upload) = db.uploadDao().update(upload)
+    suspend fun deleteUpload (upload: Upload) = db.uploadDao().delete(upload)
 
 
 }

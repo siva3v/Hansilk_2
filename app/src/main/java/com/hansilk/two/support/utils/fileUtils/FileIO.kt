@@ -16,6 +16,8 @@ import java.lang.Exception
 class FileIO {
     companion object {
 
+
+
         fun saveCollectionImageReturnPath(context: Context, bitmap: Bitmap, filename: Long): File {
             val folder: File? = context.getExternalFilesDir("Hansilk/Two")
             val file = File(folder, "$filename.jpg")
@@ -34,7 +36,7 @@ class FileIO {
             return file
         }
 
-
+/*
         private fun makeExtFileHansilkTwoJpg(context: Context, filename: String): File {
 
             val folder: File? = context.getExternalFilesDir("Hansilk/Two")
@@ -97,7 +99,6 @@ class FileIO {
                 }
             }
         }
-
+*/
     }
-
 }

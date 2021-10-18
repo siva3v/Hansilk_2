@@ -47,7 +47,6 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
         (application as MyApplication).netComponent?.inject(this)
 
         repo = UploadsRepository(dbInstance)
-        uploadFragStep.value = -1
 
         uploadFragModel.put("cb", 280)
         uploadFragModel.put("ck", 336)
@@ -111,6 +110,8 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
         viewModelScope.launch {
 
             val jj = uploadFragModel
+            uploadFragModel = JSONObject()
+
             val pathString = if (jj.has("path")) jj.getString("path") else ""
             val list = ListUtils.StringToArrayListWith___(pathString)
 
@@ -152,7 +153,6 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
                 }
             }
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                println("onFailure $query :: ${t.message}")
                 uploadProductsToDb(jj)
             }
         })
@@ -163,6 +163,18 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
     fun insertUpload (upload: Upload){
         viewModelScope.launch {
             repo.insertUpload(upload)
+        }
+    }
+
+    fun updateUpload (upload: Upload){
+        viewModelScope.launch {
+            repo.updateUpload(upload)
+        }
+    }
+
+    fun deleteUpload (upload: Upload){
+        viewModelScope.launch {
+            repo.deleteUpload(upload)
         }
     }
 

@@ -5,6 +5,7 @@ import com.hansilk.two.blocks.common.comData.dra.SyncDraService
 import com.hansilk.two.blocks.uploads.frags.UploadsFragment
 import com.hansilk.two.blocks.uploads.main.UploadsActivity
 import com.hansilk.two.blocks.uploads.main.UploadsViewModel
+import com.hansilk.two.blocks.uploads.service.UploadService
 import com.hansilk.two.support.dagger.modules.AppModule
 import com.hansilk.two.support.dagger.modules.ViewModelModule
 import com.hansilk.two.support.retrofit.RetrofitApiModule
@@ -22,6 +23,7 @@ interface AppComponent {
 
     //Services
     fun inject(service: SyncDraService?)
+    fun inject(service: UploadService?)
 
     //Fragments
     fun inject(fragment: UploadsFragment?)

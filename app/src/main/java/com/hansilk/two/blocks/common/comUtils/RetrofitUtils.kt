@@ -4,6 +4,7 @@ import com.hansilk.two.support.utils.listUtils.ListUtils
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.ArrayList
+import java.util.concurrent.locks.Condition
 
 class RetrofitUtils {
     companion object {
@@ -28,6 +29,11 @@ class RetrofitUtils {
 
             return "INSERT INTO $tableName (${ListUtils.ArrayListToString(cl)}) " +
                     "VALUES (${ListUtils.ArrayListToString(vl)})"
+        }
+
+        fun getUpdateQueryFromTableRows(tableName: String, update: String, condition: String ): String {
+
+            return "UPDATE `$tableName` SET $update WHERE $condition"
         }
 
     }

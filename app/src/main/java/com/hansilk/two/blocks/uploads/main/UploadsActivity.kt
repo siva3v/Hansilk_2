@@ -3,8 +3,14 @@ package com.hansilk.two.blocks.uploads.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hansilk.two.R
 import com.hansilk.two.blocks.uploads.frags.UploadsFragment
+import com.hansilk.two.blocks.uploads.service.UploadService
+import com.hansilk.two.blocks.uploads.uploadsList.ItemTouchHelperCallback
+import com.hansilk.two.blocks.uploads.uploadsList.UploadDiffUtil
+import com.hansilk.two.blocks.uploads.uploadsList.UploadListAdapter
 import com.hansilk.two.databinding.ActivityUploadsBinding
 import com.hansilk.two.support.MyApplication
 import com.hansilk.two.support.dagger.viewModelSet.DaggerViewModelFactory
@@ -29,6 +35,7 @@ class UploadsActivity : AppCompatActivity() {
 
         CheckAskPermissions.checkAskRequestStoragePermissions(this, this)
 
+
     }
 
     private fun initBindingDiAndViewModel() {
@@ -47,6 +54,19 @@ class UploadsActivity : AppCompatActivity() {
 
     private fun initUploads(){
 
+        val adapter = UploadListAdapter(UploadDiffUtil())
+
+        binding.rcvRemainingUploadsAct.adapter = adapter
+        binding.rcvRemainingUploadsAct.layoutManager = LinearLayoutManager(this)
+
+        val callback: ItemTouchHelper.Callback = ItemTouchHelperCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(binding.rcvRemainingUploadsAct)
+
+        viewModel.getAllUpload()?.observe(this) {
+            adapter.submitList(it)
+        }
+
         binding.fabAddProduct.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.flv_fragment, UploadsFragment())
@@ -55,5 +75,6 @@ class UploadsActivity : AppCompatActivity() {
         }
 
     }
+
 
 }
