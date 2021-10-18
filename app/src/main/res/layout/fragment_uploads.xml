@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.hansilk.two.blocks.uploads.main.UploadsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true">
+
+        <ScrollView
+            android:id="@+id/vsv_chipScroll_uploadsFrag"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/llv_imageEtc_uploadsFrag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chpgrp_selections_uploadsFrag"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:padding="12dp"
+                app:singleSelection="true" />
+
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/llv_imageEtc_uploadsFrag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/iv_prev_uploadsFrag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_addProducts_uploadsFrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:minHeight="48dp"
+                app:srcCompat="@drawable/ic_baseline_add_circle_24" />
+
+            <EditText
+                android:id="@+id/et_price_uploadsFrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/bg_outlined_rect_grey_06"
+                android:ems="10"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tv_summary_uploadsFrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_addDra_uploadsFrag"
+            style="@style/ImageViewSmall"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add_circle_24" />
+
+        <ImageView
+            android:id="@+id/iv_prev_uploadsFrag"
+            style="@style/ImageViewSmall"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view"
+            app:srcCompat="@drawable/ic_baseline_chevron_left_24" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_next_uploadsFrag"
+            style="@style/ImageViewSmall"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view"
+            app:srcCompat="@drawable/ic_baseline_chevron_right_24" />
+
+        <ImageView
+            android:id="@+id/iv_done_uploadsFrag"
+            style="@style/ImageViewSmall"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_baseline_check_circle_24" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
