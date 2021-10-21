@@ -48,13 +48,6 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
 
         repo = UploadsRepository(dbInstance)
 
-        uploadFragModel.put("cb", 280)
-        uploadFragModel.put("ck", 336)
-        uploadFragModel.put("cl", 339)
-        uploadFragModel.put("cm", 345)
-        uploadFragModel.put("cc", 248)
-        uploadFragModel.put("ac", 2)
-
     }
 
     fun syncDra(){
@@ -98,14 +91,6 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
     fun getFilteredDra(ba: String) = repo.getFilteredDra(ba)
 
 
-
-
-
-
-
-
-
-
     fun addProductsToQueue(cu : String){
         viewModelScope.launch {
 
@@ -115,17 +100,18 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
             val pathString = if (jj.has("path")) jj.getString("path") else ""
             val list = ListUtils.StringToArrayListWith___(pathString)
 
-            val ab = UidUtils.getUidMillies()
-            jj.put("ab", ab)
-            jj.put("bc", 1)
+            jj.put("bc", 0)
             jj.put("cu", cu)
             jj.put("iy", list.size)
 
             for (path in list) {
 
+                val ab = UidUtils.getUidMillies()
+
                 val colorList = ImageColors.getPossibleColorsFromBitmap(FileBitmap.getBitmapFromPath(path))
                 val cg = ListUtils.ArrayListToString(colorList)
 
+                jj.put("ab", ab)
                 jj.put("cg", cg)
 
                 uploadProductsToDb(jj)
@@ -136,6 +122,7 @@ class UploadsViewModel @Inject constructor(application: Application): AndroidVie
                 upload.ab = ab
                 upload.bc = 1
                 insertUpload(upload)
+
             }
 
         }

@@ -21,8 +21,12 @@ interface RetrofitApi {
     @POST("sset.php")
     fun sset(@Field("pac") str: String?): Call<ResponseBody?>?
 
-    @POST("muha.php")
+    @POST("saveFileFromRetrofitRha.php")
     @Multipart
     fun uploadToRha(@Part part: MultipartBody.Part?): Call<ResponseBody?>?
+
+    @POST("saveFileFromRetrofitRhaSm.php")
+    @Multipart
+    fun uploadToRhaSm(@Part part: MultipartBody.Part?): Call<ResponseBody?>?
 
 }

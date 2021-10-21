@@ -2,29 +2,32 @@ package com.hansilk.two
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.hansilk.two.blocks.uploads.main.UploadsActivity
 import com.hansilk.two.blocks.uploads.service.UploadService
+import com.hansilk.two.databinding.ActivityMainBinding
 import com.hansilk.two.support.utils.fileUtils.FilePath
 import com.hansilk.two.support.utils.fileUtils.FileSize
-import com.hansilk.two.support.utils.imageUtils.ImageEdit
-import com.hansilk.two.support.utils.listUtils.ListUtils
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
-import id.zelory.compressor.constraint.size
+import com.hansilk.two.support.utils.imageUtils.ImageCompress
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
 
+
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         startActivity(Intent(this, UploadsActivity::class.java))
         UploadService.startService(applicationContext,"")
@@ -44,28 +47,48 @@ class MainActivity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = it.data
 
-                if (data?.data != null) {
-                    val uri = data.data!!
-                    val path = FilePath.getPath(this, uri)
-                    val file = File(path)
-                    imcomp(file)
+                if (data != null) {
+                    if (data.clipData != null) {
+                        val mClipData = data.clipData
+                        for (i in 0 until mClipData!!.itemCount) {
+                            val uri = mClipData.getItemAt(i).uri
+                            val path = this.let { it1 -> FilePath.getPath(it1, uri) }
+                            val file = File(path)
+                            imcomp(file)
+                        }
+                    } else if (data.data != null) {
+                        val uri = data.data!!
+                        val path = this.let { it1 -> FilePath.getPath(it1, uri) }
+                        val file = File(path)
+                        imcomp(file)
+                    }
                 }
+
             }
         }
 
     fun imcomp(originalFile: File){
+
+        val iv = ImageView(this)
+        iv.setPadding(60,60,60,60)
+
+        binding.mainLlv.addView(iv)
+
         lifecycleScope.launch {
             coroutineScope {
-                val compressedFile = Compressor.compress(applicationContext, originalFile) {
-                    resolution(1280, 720)
-                    quality(80)
-                    size(1)
-                }
-                //uploadFile(upload, originalFile)
-                println("Size :: originalFile ${FileSize.fileSizeInKB(originalFile)}")
-                println("Size :: compressedFile ${FileSize.fileSizeInKB(compressedFile)}")
+
+                val compressedFile = ImageCompress.compressImageSmall(applicationContext, originalFile)
+
+                val originalFileSize = FileSize.fileSizeInKB(originalFile)
+                val compressedFileSize = FileSize.fileSizeInKB(compressedFile)
+
+                println("Size :: $originalFileSize :: $compressedFileSize")
+
+                val bitmap = BitmapFactory.decodeFile(compressedFile.absolutePath)
+                iv.setImageBitmap(bitmap)
             }
         }
     }
+
 
 }

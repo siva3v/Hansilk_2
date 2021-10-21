@@ -51,6 +51,7 @@ import retrofit2.Retrofit
 import java.lang.StringBuilder
 import javax.inject.Inject
 import kotlin.math.max
+import kotlin.math.min
 
 class UploadsFragment : Fragment() {
 
@@ -79,6 +80,13 @@ class UploadsFragment : Fragment() {
 
         viewModel.uploadFragStep.value = -1
 
+        viewModel.uploadFragModel.put("cb", 280)
+        viewModel.uploadFragModel.put("ck", 336)
+        viewModel.uploadFragModel.put("cl", 339)
+        viewModel.uploadFragModel.put("cm", 345)
+        viewModel.uploadFragModel.put("cc", 248)
+        viewModel.uploadFragModel.put("ac", 2)
+
         binding.ivAddProductsUploadsFrag.setOnClickListener{
             selectImages()
         }
@@ -97,10 +105,10 @@ class UploadsFragment : Fragment() {
                         e.printStackTrace()
                     }
                 }
-            } else {
-                viewModel.syncDra()
             }
         }
+
+        viewModel.syncDra()
 
         initChipGroup()
 
@@ -235,8 +243,8 @@ class UploadsFragment : Fragment() {
             var summary = ""
 
             val cq: Int = enteredStr.toInt()
-            val rb: Int = cq+ max(50.0,(cq*0.06)).toInt()
-            val cp: Int = cq+ max(100.0,(cq*0.14)).toInt()
+            val rb: Int = cq+ min(320, max(50.0,(cq*0.12)).toInt())
+            val cp: Int = cq+ min(640,max(100.0,(cq*0.24)).toInt())
             val ca: Int = CatalogUtils.getReoCa(cp)
 
             for (ky in viewModel.uploadFragAttrSet){
@@ -286,12 +294,13 @@ class UploadsFragment : Fragment() {
     private fun processCollection(){
 
         val jj = viewModel.uploadFragModel
+
         val pathString = if (jj.has("path")) jj.getString("path") else ""
         val list = ListUtils.StringToArrayListWith___(pathString)
 
         val ab = UidUtils.getUidMillies()
         jj.put("ab", ab)
-        jj.put("bc", 0)
+        jj.put("bc", 1)
         jj.put("iy", list.size)
 
         pushCollectionToReo(jj)

@@ -46,9 +46,8 @@ import retrofit2.Response
 import java.io.File
 import kotlin.collections.ArrayList
 import android.app.NotificationManager
-
-
-
+import com.hansilk.two.support.utils.imageUtils.ImageCompress
+import com.hansilk.two.support.utils.imageUtils.ImageSaver
 
 
 class UploadService : LifecycleService() {
@@ -159,20 +158,43 @@ class UploadService : LifecycleService() {
         val context = this
         lifecycleScope.launch {
             coroutineScope {
-                val compressedFile = Compressor.compress(context, originalFile) {
-                    resolution(1280, 720)
-                    quality(80)
-                    size(2)
-                }
-                uploadFile(upload, compressedFile)
-                println("Size :: originalFile ${FileSize.fileSizeInKB(originalFile)}")
-                println("Size :: compressedFile ${FileSize.fileSizeInKB(compressedFile)}")
+
+                val (compressedFileMid, compressedFileSmall) =
+                    ImageCompress.compressImageForRhaSm(context, originalFile)
+
+                //val compressedFileMid = ImageCompress.compressImageMid(context, originalFile)
+                //val compressedFileSmall = ImageCompress.compressImageSmall(context, compressedFileMid)
+
+                uploadFileRha(upload, compressedFileMid, compressedFileSmall)
             }
         }
 
     }
 
-    private fun uploadFile(upload: Upload, file: File){
+    private fun uploadFileRha(upload: Upload, compressedFileMid: File, compressedFileSmall: File){
+
+        val name = "${upload.ab}.jpg"
+
+        val payload = MultipartBody.Part.createFormData(
+            "uploaded_file", name,
+            RequestBody.create(MediaType.parse("multipart/form-data"), compressedFileMid)
+        )
+
+        val api = retrofit.create(RetrofitApi::class.java)
+        api.uploadToRha(payload)?.enqueue(object : Callback<ResponseBody?> {
+            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                if (response.isSuccessful && response.body()!=null) {
+                    //upload small image to rha/sm/
+                    uploadFileRhaSm(upload, compressedFileSmall)
+                }
+            }
+            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                uploadFileRha(upload, compressedFileMid, compressedFileSmall)
+            }
+        })
+    }
+
+    private fun uploadFileRhaSm(upload: Upload, file: File){
 
         val name = "${upload.ab}.jpg"
 
@@ -182,7 +204,7 @@ class UploadService : LifecycleService() {
         )
 
         val api = retrofit.create(RetrofitApi::class.java)
-        api.uploadToRha(payload)?.enqueue(object : Callback<ResponseBody?> {
+        api.uploadToRhaSm(payload)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
                 if (response.isSuccessful && response.body()!=null) {
                     upload.ab?.let { updateProductInReo(it) }
@@ -192,7 +214,7 @@ class UploadService : LifecycleService() {
                 }
             }
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
-                uploadFile(upload, file)
+                uploadFileRhaSm(upload, file)
             }
         })
     }
@@ -206,7 +228,7 @@ class UploadService : LifecycleService() {
     }
 
     fun updateProductInReo(ab: Long){
-        val query = RetrofitUtils.getUpdateQueryFromTableRows("reo","ac=3","ab=$ab")
+        val query = RetrofitUtils.getUpdateQueryFromTableRows("reo","ac=1","ab=$ab")
         val api = retrofit.create(RetrofitApi::class.java)
         api.sset(query)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
