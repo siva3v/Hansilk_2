@@ -243,8 +243,11 @@ class UploadsFragment : Fragment() {
             var summary = ""
 
             val cq: Int = enteredStr.toInt()
-            val rb: Int = cq+ min(320, max(50.0,(cq*0.12)).toInt())
-            val cp: Int = cq+ min(640,max(100.0,(cq*0.24)).toInt())
+            //val rb: Int = cq+ min(320, max(50.0,(cq*0.12)).toInt())
+            //val cp: Int = cq+ min(640,max(100.0,(cq*0.24)).toInt())
+
+            val rb: Int = (cq + max(50.0, cq * 0.2) + 75).toInt()
+            val cp: Int = (rb + max(80.0, cq * 0.1)).toInt()
             val ca: Int = CatalogUtils.getReoCa(cp)
 
             for (ky in viewModel.uploadFragAttrSet){
